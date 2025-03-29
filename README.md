@@ -1,1 +1,1 @@
-# Shop-NextAuth-Prisma
+# Shop-NodeJS-Prisma
