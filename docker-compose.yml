@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:15
+    image: postgres:17
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -15,7 +15,7 @@ services:
     build: .
     restart: always
     ports:
-      - "3000:3000"
+      - "3000" 
     depends_on:
       - db
     environment:
@@ -23,7 +23,17 @@ services:
       - PORT=${PORT}
       - SECRET_KEY=${SECRET_KEY}
     volumes:
-      - ./src:/app/src  # Mapeia /src para hot-reload em desenvolvimento
+      - ./src:/app/src # Mapeia /src para hot-reload em desenvolvimento
+
+  nginx:
+    image: nginx
+    restart: always
+    ports:
+      - "80:80" 
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf 
+    depends_on:
+      - app
 
 volumes:
   postgres-data:
