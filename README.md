@@ -8,7 +8,7 @@ Dentro do projeto:
 docker-compose up -d --build
 ```
 ```bash
-docker-compose exec app npx prisma migrate dev --name init
+docker-compose exec back-end npx prisma migrate dev --name init
 ```
 http://localhost:80
 
