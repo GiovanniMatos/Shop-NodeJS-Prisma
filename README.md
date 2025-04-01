@@ -12,5 +12,4 @@ docker-compose exec back-end npx prisma migrate dev --name init
 ```
 http://localhost:80
 
-![image](https://github.com/user-attachments/assets/2dd6c1b2-94b5-4ddc-b6f6-08f0b3fcc010)
-
+![image](https://github.com/user-attachments/assets/7078b944-c21f-4298-a8c2-64f8bf1b1326)
