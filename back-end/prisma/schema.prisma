@@ -14,14 +14,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  carts     Cart[]
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+  carts    Cart[]
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   price       Float
   description String?
@@ -30,10 +31,10 @@ model Product {
 }
 
 model Cart {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   userId    Int
   productId Int
-  quantity  Int      @default(1)
-  user      User     @relation(fields: [userId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+  user      User    @relation(fields: [userId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }

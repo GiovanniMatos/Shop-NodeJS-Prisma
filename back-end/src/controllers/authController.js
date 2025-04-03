@@ -3,13 +3,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword },
+      data: { username, email, password: hashedPassword },
     });
-    res.status(201).json({ message: 'Usuário criado', userId: user.id });
+    res.status(201).json({ message: 'Usuário criado', userId: user.id, userName: user.username });
   } catch (err) {
     res.status(400).json({ error: 'Não foi possível cadastrar' });
   }
