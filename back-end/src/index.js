@@ -2,15 +2,15 @@ const express = require('express');
 const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
-
+const cors = require('cors');
 const app = express();
+app.use(cors());
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
-
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
@@ -19,7 +19,7 @@ app.get('/api/health', (req, res) => {
 // Rotas
 app.use('/api', require('./routes/shopRoutes'));
 app.use('/api', require('./routes/authRoutes'));
-app.use('/api', require('./routes/cartRoutes'));
+app.use('/api', require('./routes/cartRoutes')); 
 
 async function connectToDatabase() {
   try {

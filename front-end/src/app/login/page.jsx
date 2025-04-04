@@ -24,7 +24,7 @@ export default function Login() {
       if (!response.ok) throw new Error(data.error || 'Erro ao fazer login');
 
       localStorage.setItem('token', data.token);
-      router.push('/shop');
+      router.push('/');
     } catch (err) {
       setError(err.message);
     }
