@@ -31,50 +31,54 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Senha
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              required
-            />
-          </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md transition duration-200"
-          >
-            Entrar
-          </button>
-        </form>
-        <p className="mt-2 text-sm text-center text-gray-600">
-          Não tem uma conta?{' '}
-          <a href="/register" className="text-indigo-600 hover:underline">
-            Registre-se
-          </a>
-        </p>
+    <div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-t from-gray-400 to-gray-600">
+      <div className="flex w-full max-w-5xl bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="w-1/2 p-12">
+          <h1 className="text-4xl font-bold text-white mb-4">Bem-vindo à loja</h1>
+          <p className="text-white text-lg">
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+          </p>
+          
+        </div>
+        <div className="w-1/2 p-12 bg-white">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Acessar conta</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-3 border rounded-md focus:ring focus:ring-indigo-200"
+                required
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <label className="flex items-center">
+                <a href="/register" className="text-sm text-indigo-600">Criar uma conta</a>
+              </label>
+              <a href="#" className="text-sm text-indigo-600">Esqueci minha senha</a>
+            </div>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-gray-800 to-gray-600 text-white rounded-md"
+            >
+              LOGIN
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
