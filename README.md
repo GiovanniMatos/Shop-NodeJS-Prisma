@@ -13,7 +13,7 @@ http://localhost:80
 
 ## <b>Visão geral:</b><br>
 
-<b>Segurança:</b><br/>
+![](https://img.shields.io/badge/SEGURANÇA:-e41a43?style=for-the-badge&Color=white) <br>
 ✅ Proteção contra ataques de Brute Force
 ✅ Proteção contra SQL Injection
 ✅ Proteção contra CSRF
