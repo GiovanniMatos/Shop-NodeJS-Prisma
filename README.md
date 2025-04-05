@@ -11,7 +11,14 @@ docker-compose exec back-end npx prisma migrate dev --name init
 ```
 http://localhost:80
 
-<b>Visão geral:</b><br>
+## <b>Visão geral:</b><br>
+
+Segurança:
+✅ Proteção contra ataques de Brute Force
+✅ Proteção contra SQL Injection
+✅ Proteção contra CSRF
+✅ Proteção contra XSS
+
 O arquivo de configuração do Nginx (nginx.conf) direciona as requisições que começam com /api para o servidor back-end.<br>
 O arquivo index.js do back-end define as rotas que o servidor back-end irá responder quando receber essas requisições.
 
