@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios'; 
 
 export default function Register() {
     const [username, setUsername] = useState('');
@@ -15,8 +16,8 @@ export default function Register() {
         setError('');
 
         // Validações no lado do cliente
-        if (!username || username.length < 3) {
-            setError('Username deve ter pelo menos 3 caracteres.');
+        if (!username || username.length < 4) {
+            setError('Username deve ter pelo menos 4 caracteres.');
             return;
         }
 
@@ -31,26 +32,17 @@ export default function Register() {
         }
 
         try {
-            const response = await fetch('/api/register', {
-                method: 'POST',
+            const response = await axios.post('/api/register', { username, email, password }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, email, password }),
             });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Erro ao registrar');
-            }
 
             router.push('/login');
         } catch (err) {
-            setError(err.message);
+            setError(err.response?.data?.error || 'Erro ao registrar');
         }
     };
-
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-t from-gray-400 to-gray-600">
             <div className="flex w-full max-w-5xl bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">

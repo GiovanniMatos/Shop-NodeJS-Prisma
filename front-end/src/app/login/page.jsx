@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -25,25 +26,17 @@ export default function Login() {
         }
 
         try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
+            const response = await axios.post('/api/login', { email, password });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Erro ao fazer login');
-
-            // Armazenamento do token no cookie
-            Cookies.set('jwt', data.token, {
+            Cookies.set('jwt', response.data.token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production', // será "true" se estiver em produção pelo .env
-                sameSite: 'strict', // cookie só será enviado em solicitações vindas do mesmo site -> contra CSRF
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
                 expires: 1,
             });
             router.push('/');
         } catch (err) {
-            setError(err.message);
+            setError(err.response?.data?.error || 'Erro ao fazer login');
         }
     };
 
