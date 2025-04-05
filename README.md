@@ -14,9 +14,9 @@ http://localhost:80
 ## <b>Visão geral:</b><br>
 
 ![](https://img.shields.io/badge/SEGURANÇA:-e41a43?style=for-the-badge&Color=white) <br>
-✅ Proteção contra ataques de Brute Force
-✅ Proteção contra SQL Injection
-✅ Proteção contra CSRF
+✅ Proteção contra ataques de Brute Force<br/>
+✅ Proteção contra SQL Injection<br/>
+✅ Proteção contra CSRF<br/>
 ✅ Proteção contra XSS
 
 A combinação de jwtMiddleware e csrfMiddleware fornece uma proteção robusta contra ataques.
