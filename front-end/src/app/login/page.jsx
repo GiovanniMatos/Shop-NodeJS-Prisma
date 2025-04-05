@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -23,7 +24,13 @@ export default function Login() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Erro ao fazer login');
 
-      localStorage.setItem('token', data.token);
+      // Armazenamento do token no cookie
+      Cookies.set('jwt', data.token, {
+        httpOnly: true,
+        secure: false, // em ambiente de produção deve estar como "true"
+        sameSite: 'strict', // cookie só será enviado em solicitações originadas do mesmo site -> contra CSRF
+        expires: 1, 
+    });
       router.push('/');
     } catch (err) {
       setError(err.message);

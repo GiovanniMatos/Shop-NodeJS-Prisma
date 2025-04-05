@@ -37,12 +37,20 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (user && await bcrypt.compare(password, user.password)) {
-    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token });
-  } else {
-    res.status(401).json({ error: 'Credenciais inválidas' });
+  const ip = req.ip;
+
+  try {
+      const user = await prisma.user.findUnique({ where: { email } });
+
+      if (user && await bcrypt.compare(password, user.password)) {
+          const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+          return res.json({ token });
+      } else {
+          return res.status(401).json({ error: 'Credenciais inválidas' });
+      }
+  } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
 
