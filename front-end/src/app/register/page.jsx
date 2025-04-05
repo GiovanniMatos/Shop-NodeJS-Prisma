@@ -14,6 +14,22 @@ export default function Register() {
         e.preventDefault();
         setError('');
 
+        // Validações no lado do cliente
+        if (!username || username.length < 3) {
+            setError('Username deve ter pelo menos 3 caracteres.');
+            return;
+        }
+
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            setError('Email inválido.');
+            return;
+        }
+
+        if (!password || password.length < 8) {
+            setError('Senha deve ter pelo menos 8 caracteres.');
+            return;
+        }
+
         try {
             const response = await fetch('/api/register', {
                 method: 'POST',
