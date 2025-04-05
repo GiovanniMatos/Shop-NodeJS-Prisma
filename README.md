@@ -13,11 +13,14 @@ http://localhost:80
 
 ## <b>Visão geral:</b><br>
 
-Segurança:
+<b>Segurança:</b><br/>
 ✅ Proteção contra ataques de Brute Force
 ✅ Proteção contra SQL Injection
 ✅ Proteção contra CSRF
 ✅ Proteção contra XSS
+
+A combinação de jwtMiddleware e csrfMiddleware fornece uma proteção robusta contra ataques.
+Um atacante precisaria tanto de um token JWT válido quanto de um token CSRF válido para realizar ações nas rotas do carrinho.
 
 O arquivo de configuração do Nginx (nginx.conf) direciona as requisições que começam com /api para o servidor back-end.<br>
 O arquivo index.js do back-end define as rotas que o servidor back-end irá responder quando receber essas requisições.
