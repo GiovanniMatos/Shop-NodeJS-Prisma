@@ -33,12 +33,15 @@ Rota para autenticação de usuários. Usa o loginLimiter e validateLogin do log
 <b>/api/register (POST)</b>: <br/>
 Rota para registro de novos usuários. Usa o validateRegister do loginGuard middleware para validar dados ao registrar usuário, impedindo usernames com menos de 4 caracteres e senhas com menos de 8.
 
-![image](https://github.com/user-attachments/assets/7b61692c-0a0a-4005-9d56-bfe480493ba8)
+<b>/api/csrf-token (GET)</b>: <br/>
+Rota que gera o token CSRF apenas à usuários autenticados.
+
+![image](https://github.com/user-attachments/assets/3cd1cedb-34c3-4eac-a4b5-52db9b05648c)
 ![image](https://github.com/user-attachments/assets/eca81370-79f3-4531-b287-a9bec7fe0d9c)
 
 O authMiddleware é opcional, algumas rotas usam o jwtMiddleware para permitir o acesso apenas à usuários autenticados.
 
-![image](https://github.com/user-attachments/assets/442f7fcb-15f8-4a9e-8667-d9f62357f41d)
+![image](https://github.com/user-attachments/assets/a4ed773c-625b-4526-b702-34ad44c692d4)
 
 
 ![image](https://github.com/user-attachments/assets/7078b944-c21f-4298-a8c2-64f8bf1b1326)
