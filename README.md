@@ -66,6 +66,10 @@ O arquivo <b>nodeDoS.js</b> pode ser usado para testar a proteção contra ataqu
 
 ![image](https://github.com/user-attachments/assets/48f865a7-ec9d-4b3c-8a35-f57383cc5d30)
 
+Observação: As medidas de proteção contra DoS implementadas podem ser eficazes se o ataque for originado de um único IP ou um número limitado, porém quando se trata de DDoS a recomendação é o uso de Firewall e CDN.
+
+![image](https://github.com/user-attachments/assets/d39e6243-f9e9-4666-8eb0-5b5d2ce84a37)
+
 
 <hr/>
 
