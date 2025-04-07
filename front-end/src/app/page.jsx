@@ -2,35 +2,36 @@
 
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
-  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState(null);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('/api/products');
-        if (response.ok) {
-          const data = await response.json();
-          setProducts(data.products);
-          const token = Cookies.get('token');
-          setUser(!!token);
-        } else {
-          setError('Erro ao carregar os produtos.');
-        }
-      } catch (err) {
-        setError('Erro ao conectar com o servidor.');
-        console.error('Erro na loja:', err);
-      }
+    // Verifica se o usuário está autenticado pela resposta do authController
+    const storedUsername = Cookies.get('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
     }
-
-    fetchData();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+        await axios.post('/api/logout');
+        Cookies.remove('username');
+        setUsername(null);
+        router.push('/');
+    } catch (err) {
+        console.error('Erro ao fazer logout:', err);
+    }
+};
+
   const handleAddToCart = async (productId) => {
-    const token = Cookies.get('token');
+    const token = Cookies.get('jwt');
     if (!token) {
       setError('Você precisa estar logado para adicionar produtos ao carrinho.');
       return;
@@ -63,8 +64,19 @@ export default function Home() {
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold">Minha Loja</h1>
           <nav>
-            <a href="/login" className="mx-2 hover:underline">Login</a>
-            <a href="/register" className="mx-2 hover:underline">Registrar</a>
+            {username ? (
+              <div className="flex items-center">
+                <span className="mx-2">Bem-vindo, {username}!</span>
+                <button onClick={handleLogout} className="mx-2 hover:underline text-white bg-red-500 py-2 px-4">
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <>
+                <a href="/login" className="mx-2 hover:underline">Login</a>
+                <a href="/register" className="mx-2 hover:underline">Registrar</a>
+              </>
+            )}
           </nav>
         </div>
       </header>

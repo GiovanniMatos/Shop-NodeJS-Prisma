@@ -37,21 +37,33 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const ip = req.ip;
 
   try {
-      const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email } });
 
-      if (user && await bcrypt.compare(password, user.password)) {
-          const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-          return res.json({ token });
-      } else {
-          return res.status(401).json({ error: 'Credenciais inválidas' });
-      }
+    if (user && await bcrypt.compare(password, user.password)) {
+      const token = jwt.sign({ userId: user.id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '1h' });
+
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 3600000, // 1 hora
+      });
+
+      return res.json({ username: user.username });
+    } else {
+      return res.status(401).json({ error: 'Credenciais inválidas' });
+    }
   } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error(err);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
 
-module.exports = { register, login };
+const logout = (req, res) => {
+  res.clearCookie('jwt');
+  return res.status(200).json({ message: 'Logout bem-sucedido' });
+};
+
+module.exports = { register, login, logout };
