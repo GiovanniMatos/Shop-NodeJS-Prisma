@@ -62,7 +62,9 @@ Se um IP exceder esse limite, as requisições adicionais serão tratadas de aco
 <b>burst=20</b> permite que até 20 requisições sejam aceitas em um curto período de tempo, além do limite de taxa de 10 requisições por segundo.<br>
 <b>nodelay</b> define que tudo que exceder o burst será rejeitado imediatamente.
 
-O arquivo <b>nodeDoS.js</b> pode ser usado para testar a proteção contra ataques DoS
+O arquivo <b>simple_http_stress.js</b> pode ser usado para testar a quantidade de requisições GET ao servidor, enquanto o arquivo <b>tcp_syn_flooder.py</b> simula um SYN Flood.<br>
+
+Enquanto o <b>simple_http_stress.js</b> atua na camada 7 (Aplicação), que depende do servidor responder, o <b>tcp_syn_flooder.py</b> atua nas camadas 3 e 4 do modelo OSI (Rede e Transporte), enviando pacotes TCP SYN diretamente ao host-alvo sem depender de uma resposta do servidor, o que torna o ataque mais efetivo e difícil de mitigar usando regras convencionais de firewall ou bloqueios por aplicação.
 
 ![image](https://github.com/user-attachments/assets/48f865a7-ec9d-4b3c-8a35-f57383cc5d30)
 
