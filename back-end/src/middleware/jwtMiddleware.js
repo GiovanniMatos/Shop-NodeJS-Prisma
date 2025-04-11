@@ -6,8 +6,8 @@ const SECRET_KEY = process.env.SECRET_KEY;
 function jwtMiddleware(req, res, next) {
     let token;
 
-    if (req.cookies && req.cookies.token) {
-        token = req.cookies.token;
+    if (req.cookies && req.cookies.jwt) {
+        token = req.cookies.jwt;
     } else {
         return res.status(401).json({ message: 'Token not provided' });
     }

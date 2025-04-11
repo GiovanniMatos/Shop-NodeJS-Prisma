@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { getShop } = require('../controllers/shopController');
+const shopController = require('../controllers/shopController');
 
-router.get('/products', getShop); // /api/products via NGINX
+router.get('/products', shopController.getAllProducts);
 
 module.exports = router;

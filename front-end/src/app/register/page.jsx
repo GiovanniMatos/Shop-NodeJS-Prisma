@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios'; 
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default function Register() {
     const [username, setUsername] = useState('');
@@ -15,7 +16,6 @@ export default function Register() {
         e.preventDefault();
         setError('');
 
-        // Validações no lado do cliente
         if (!username || username.length < 4) {
             setError('Username deve ter pelo menos 4 caracteres.');
             return;
@@ -38,7 +38,13 @@ export default function Register() {
                 },
             });
 
-            router.push('/login');
+            Cookies.set('username', response.data.username || username, {
+                expires: 1,
+                secure: true,
+                sameSite: 'Strict',
+            });
+
+            router.push('/');
         } catch (err) {
             setError(err.response?.data?.error || 'Erro ao registrar');
         }

@@ -9,10 +9,20 @@ docker-compose up -d --build
 ```bash
 docker-compose exec back-end npx prisma migrate dev --name init
 ```
-Caso não tenha o Docker instalado:
 ```bash
-npm install && cd back-end && npm install && cd ../front-end && npm install
+docker-compose exec back-end node prisma/seed.js
 ```
+Caso não tenha o Docker instalado:<br>
+(back-end)
+```bash
+npm install && cd back-end && npm install && npx prisma migrate dev --name init
+&& node prisma/seed.js && npm run dev
+```
+(front-end)
+```bash
+cd front-end && npm install && npm run dev
+```
+
 http://localhost:80
 
 ## <b>Visão geral:</b><br>

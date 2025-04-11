@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
@@ -12,57 +12,75 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Verifica se o usuário está autenticado pela resposta do authController
     const storedUsername = Cookies.get('username');
     if (storedUsername) {
       setUsername(storedUsername);
     }
+
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get('/api/products');
+        setProducts(res.data);
+      } catch (err) {
+        console.error('Erro ao buscar produtos:', err);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   const handleLogout = async () => {
     try {
-        await axios.post('/api/logout');
-        Cookies.remove('username');
-        setUsername(null);
-        router.push('/');
+      await axios.post('/api/logout', {}, { withCredentials: true });
+      Cookies.remove('username');
+      setUsername(null);
+      router.push('/');
     } catch (err) {
-        console.error('Erro ao fazer logout:', err);
-    }
-};
-
-  const handleAddToCart = async (productId) => {
-    const token = Cookies.get('jwt');
-    if (!token) {
-      setError('Você precisa estar logado para adicionar produtos ao carrinho.');
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/cart/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productId }),
-      });
-
-      if (response.ok) {
-        console.log('Produto adicionado ao carrinho.');
-      } else {
-        setError('Erro ao adicionar produto ao carrinho.');
-      }
-    } catch (err) {
-      setError('Erro ao conectar com o servidor.');
-      console.error('Erro ao adicionar ao carrinho:', err);
+      console.error('Erro ao fazer logout:', err);
     }
   };
 
+  const handleAddToCart = async (productId) => {
+    try {
+      const { data } = await axios.get('/api/csrf-token', {
+        withCredentials: true,
+      });
+  
+      const csrfToken = data.csrfToken;
+  
+      const res = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-csrf-token': csrfToken, 
+        },
+        credentials: 'include',
+        body: JSON.stringify({ productId }),
+      });
+  
+      const responseData = await res.json(); 
+  
+      if (!res.ok) {
+        setError(responseData?.error || 'Erro ao adicionar produto ao carrinho.');
+        return;
+      }
+  
+      const productName = responseData?.item?.product?.name;
+  
+      console.log(`✅ Produto adicionado ao carrinho: ${productName}`);
+      setError(null);
+    } catch (err) {
+      console.error('Erro no processo de adicionar:', err);
+      setError('Você precisa estar logado para adicionar produtos ao carrinho.');
+    }
+  };
+  
+
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-indigo-600 p-4 text-white">
+      <header className="bg-gradient-to-r from-zinc-900 to-zinc-800 p-4 text-white">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Minha Loja</h1>
+          <h1 className="text-xl font-bold">Pentest Tools</h1>
           <nav>
             {username ? (
               <div className="flex items-center">
@@ -86,11 +104,23 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((product) => (
             <div key={product.id} className="border rounded-lg p-4 shadow-md">
+              {product.image && (
+                <img
+                  src={product.image.startsWith("http") ? product.image : `/images/${product.image}`}
+                  alt={product.name}
+                  className="w-full h-60 object-cover rounded mb-2"
+                />
+              )}
               <h2 className="text-lg font-semibold">{product.name}</h2>
+              <p className="text-sm text-gray-500">
+                {product.description.length > 100
+                  ? product.description.slice(0, 100) + '...'
+                  : product.description}
+              </p>
               <p className="text-gray-600">${product.price}</p>
               <button
                 onClick={() => handleAddToCart(product.id)}
-                className="mt-2 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+                className="mt-2 bg-gradient-to-r from-zinc-800 to-zinc-600 text-white font-bold py-2 px-4 rounded"
               >
                 Adicionar ao Carrinho
               </button>
@@ -99,8 +129,8 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="bg-gray-200 p-4 text-center">
-        <p>&copy; {new Date().getFullYear()} Minha Loja. Todos os direitos reservados.</p>
+      <footer className="bg-zinc-800 p-4 text-center text-gray-200">
+        <p>&copy; {new Date().getFullYear()} Pentest Tools. Todos os direitos reservados.</p>
       </footer>
     </div>
   );

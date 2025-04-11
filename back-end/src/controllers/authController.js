@@ -1,11 +1,11 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto'); // 🔥 Pra gerar o csrf token
 
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient(); 
+const prisma = new PrismaClient();
 
 const register = async (req, res) => {
-
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
@@ -28,10 +28,10 @@ const register = async (req, res) => {
     if (err.code === 'P2002') {
       return res.status(400).json({ error: 'Username ou email já cadastrado' });
     }
-    console.error("Erro no prisma:", err); //Adicionado log para debug
+    console.error("Erro no prisma:", err);
     res.status(400).json({ error: 'Não foi possível cadastrar' });
   } finally {
-    await prisma.$disconnect(); 
+    await prisma.$disconnect();
   }
 };
 
@@ -50,6 +50,14 @@ const login = async (req, res) => {
         sameSite: 'strict',
         maxAge: 3600000, // 1 hora
       });
+      
+      const csrfToken = crypto.randomBytes(32).toString('hex');
+      res.cookie('csrfToken', csrfToken, {
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 3600000,
+      });
 
       return res.json({ username: user.username });
     } else {
@@ -63,6 +71,7 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
   res.clearCookie('jwt');
+  res.clearCookie('csrfToken');
   return res.status(200).json({ message: 'Logout bem-sucedido' });
 };
 

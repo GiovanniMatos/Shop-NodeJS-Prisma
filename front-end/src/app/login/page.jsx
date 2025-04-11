@@ -26,17 +26,19 @@ export default function Login() {
         }
 
         try {
-          const response = await axios.post('/api/login', { email, password });
-          if (response.data.username) {
-              Cookies.set('username', response.data.username, {
-                  expires: 1, 
-              });
-          }
-      
-          router.push('/');
+            const response = await axios.post('/api/login', { email, password });
+            if (response.data.username) {
+                Cookies.set('username', response.data.username, {
+                    expires: 1,
+                    secure: true,
+                    sameSite: 'Strict',
+                });
+            }
+
+            router.push('/');
         } catch (err) {
-          setError(err.response?.data?.error || 'Erro ao fazer login');
-        } 
+            setError(err.response?.data?.error || 'Erro ao fazer login');
+        }
     };
 
     return (
