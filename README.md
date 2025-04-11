@@ -36,7 +36,9 @@ cd front-end && npm install && npm run dev
 http://localhost:80
 
 ## <b>Visão geral:</b><br>
-![image](https://github.com/user-attachments/assets/95f7e44f-10ff-41b5-be1a-3649e85647f4)
+![image](https://github.com/user-attachments/assets/52835c11-ff77-412a-930d-dd57c871d1ff)<br>
+![image](https://github.com/user-attachments/assets/e0091b02-6db7-41b5-85f6-5aa5c99ce90a)
+
 
 ![](https://img.shields.io/badge/SEGURANÇA:-e41a43?style=for-the-badge&Color=white) <br>
 ✅ Proteção contra ataques DoS (Denial of Service)<br/>
