@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto'); // 🔥 Pra gerar o csrf token
+const crypto = require('crypto'); // Pra gerar o csrf token
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();

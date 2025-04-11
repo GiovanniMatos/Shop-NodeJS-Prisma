@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { FaCartShopping } from "react-icons/fa6";
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -45,36 +47,37 @@ export default function Home() {
       const { data } = await axios.get('/api/csrf-token', {
         withCredentials: true,
       });
-  
+
       const csrfToken = data.csrfToken;
-  
+
       const res = await fetch('/api/cart/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-csrf-token': csrfToken, 
+          'x-csrf-token': csrfToken,
         },
         credentials: 'include',
         body: JSON.stringify({ productId }),
       });
-  
-      const responseData = await res.json(); 
-  
+
+      const responseData = await res.json();
+
       if (!res.ok) {
         setError(responseData?.error || 'Erro ao adicionar produto ao carrinho.');
         return;
       }
-  
+
       const productName = responseData?.item?.product?.name;
-  
+
       console.log(`✅ Produto adicionado ao carrinho: ${productName}`);
       setError(null);
+      router.push('/cart');
     } catch (err) {
       console.error('Erro no processo de adicionar:', err);
       setError('Você precisa estar logado para adicionar produtos ao carrinho.');
     }
   };
-  
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -85,6 +88,9 @@ export default function Home() {
             {username ? (
               <div className="flex items-center">
                 <span className="mx-2">Bem-vindo, {username}!</span>
+                <Link href="/cart" className="mx-2">
+                  <FaCartShopping className="text-xl cursor-pointer hover:text-gray-200" />
+                </Link>
                 <button onClick={handleLogout} className="mx-2 hover:underline text-white bg-red-500 py-2 px-4">
                   Logout
                 </button>
