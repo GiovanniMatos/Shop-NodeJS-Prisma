@@ -38,13 +38,7 @@ export default function Register() {
                 },
             });
 
-            Cookies.set('username', response.data.username || username, {
-                expires: 1,
-                secure: true,
-                sameSite: 'Strict',
-            });
-
-            router.push('/');
+            router.push('/login');
         } catch (err) {
             setError(err.response?.data?.error || 'Erro ao registrar');
         }
