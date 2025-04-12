@@ -84,7 +84,7 @@ export default function CartPage() {
         headers: { 'x-csrf-token': csrfToken },
         withCredentials: true,
       });
-  
+
       if (data.url) {
         window.location.href = data.url; // redireciona pro Stripe
       }
@@ -94,8 +94,8 @@ export default function CartPage() {
   };
 
   return (
-    <main className="flex flex-col lg:flex-row min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="flex-1 max-w-3xl mx-auto">
+    <main className="flex justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
+      <div className="w-full max-w-7xl">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">🛒 Meu Carrinho</h1>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -103,63 +103,66 @@ export default function CartPage() {
         {cartItems.length === 0 ? (
           <p className="text-gray-600">Seu carrinho está vazio 😢</p>
         ) : (
-          <div className="grid gap-6">
-            {cartItems.map((item) => (
-              <div key={item.id} className="bg-white rounded-xl shadow p-4 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={item.product.image}
-                    alt={item.product.name}
-                    className="w-24 h-24 object-cover rounded-lg"
-                  />
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-800">{item.product.name}</h2>
-                    <p className="text-sm text-gray-500">{item.product.description}</p>
-                    <p className="text-gray-700 font-bold mt-1">
-                      R$ {(item.product.price * item.quantity).toFixed(2)}{' '}
-                      <span className="text-sm text-gray-500 ml-1">(Qtd: {item.quantity})</span>
-                    </p>
+          <div className="flex flex-col lg:flex-row gap-12">
+            <div className="flex-1 grid gap-6">
+              {cartItems.map((item) => (
+                <div key={item.id} className="bg-white rounded-xl shadow p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={item.product.image}
+                      alt={item.product.name}
+                      className="w-24 h-24 object-cover rounded-lg"
+                    />
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-800">{item.product.name}</h2>
+                      <p className="text-sm text-gray-500">{item.product.description}</p>
+                      <p className="text-gray-700 font-bold mt-1">
+                        R$ {(item.product.price * item.quantity).toFixed(2)}{' '}
+                        <span className="text-sm text-gray-500 ml-1">(Qtd: {item.quantity})</span>
+                      </p>
 
-                    <div className="flex gap-2 mt-2">
-                      <button
-                        onClick={() => updateQuantity(item.id, 'decrement')}
-                        className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-                      >
-                        −
-                      </button>
-                      <button
-                        onClick={() => updateQuantity(item.id, 'increment')}
-                        className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-                      >
-                        +
-                      </button>
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          onClick={() => updateQuantity(item.id, 'decrement')}
+                          className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                        >
+                          −
+                        </button>
+                        <button
+                          onClick={() => updateQuantity(item.id, 'increment')}
+                          className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <button
-                  onClick={() => handleRemoveFromCart(item.id)}
-                  className="text-red-600 hover:underline text-sm"
-                >
-                  Remover
-                </button>
-              </div>
-            ))}
+                  <button
+                    onClick={() => handleRemoveFromCart(item.id)}
+                    className="text-red-600 hover:underline text-sm"
+                  >
+                    Remover
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="w-full lg:w-1/3 bg-white p-6 rounded-xl shadow h-fit">
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">Resumo do Pedido</h2>
+              <p className="text-gray-600 text-lg">
+                Total: <span className="font-semibold">R$ {totalPrice.toFixed(2)}</span>
+              </p>
+              <button
+                onClick={handleCheckout}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-6 w-full"
+              >
+                Finalizar Compra
+              </button>
+            </div>
           </div>
         )}
       </div>
-      {cartItems.length > 0 && (
-        <div className="w-full lg:w-1/3 mt-12 lg:mt-0 lg:ml-12 bg-white p-6 rounded-xl shadow h-fit">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Resumo do Pedido</h2>
-          <p className="text-gray-600 text-lg">Total: <span className="font-semibold">R$ {totalPrice.toFixed(2)}</span></p>
-          <button
-            onClick={handleCheckout}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-6 w-full"
-          >
-            Finalizar Compra
-          </button>
-        </div>
-      )}
     </main>
+
   );
 }
