@@ -37,7 +37,7 @@ http://localhost:80
 
 ## <b>Visão geral:</b><br>
 ![image](https://github.com/user-attachments/assets/52835c11-ff77-412a-930d-dd57c871d1ff)<br>
-![image](https://github.com/user-attachments/assets/e0091b02-6db7-41b5-85f6-5aa5c99ce90a)
+![image](https://github.com/user-attachments/assets/b42e26f4-e767-45c7-99b0-0ed49dcd7f93)
 
 
 ![](https://img.shields.io/badge/SEGURANÇA:-e41a43?style=for-the-badge&Color=white) <br>
