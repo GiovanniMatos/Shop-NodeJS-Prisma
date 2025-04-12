@@ -7,6 +7,7 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [csrfToken, setCsrfToken] = useState('');
   const [error, setError] = useState('');
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const fetchCart = async () => {
     try {
@@ -14,6 +15,8 @@ export default function CartPage() {
       if (!res.ok) throw new Error('Falha ao buscar carrinho');
       const data = await res.json();
       setCartItems(data);
+      const total = data.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+      setTotalPrice(total);
     } catch (err) {
       console.error('Erro ao carregar o carrinho:', err);
       setError('Erro ao carregar os itens do carrinho.');
@@ -46,7 +49,7 @@ export default function CartPage() {
           'x-csrf-token': csrfToken,
         },
         credentials: 'include',
-        body: JSON.stringify({ cartId, type }), // type: 'increment' ou 'decrement'
+        body: JSON.stringify({ cartId, type }),
       });
 
       if (!res.ok) throw new Error('Erro ao atualizar quantidade');
@@ -69,15 +72,30 @@ export default function CartPage() {
       });
 
       if (!res.ok) throw new Error('Erro ao remover item');
-      setCartItems((prev) => prev.filter((item) => item.id !== cartId));
+      fetchCart();
     } catch (err) {
       console.error('Erro ao tentar remover item:', err);
     }
   };
 
+  const handleCheckout = async () => {
+    try {
+      const { data } = await axios.post('/api/checkout', {}, {
+        headers: { 'x-csrf-token': csrfToken },
+        withCredentials: true,
+      });
+  
+      if (data.url) {
+        window.location.href = data.url; // redireciona pro Stripe
+      }
+    } catch (err) {
+      console.error('Erro ao iniciar checkout:', err);
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <main className="flex flex-col lg:flex-row min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">🛒 Meu Carrinho</h1>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -130,6 +148,18 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      {cartItems.length > 0 && (
+        <div className="w-full lg:w-1/3 mt-12 lg:mt-0 lg:ml-12 bg-white p-6 rounded-xl shadow h-fit">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Resumo do Pedido</h2>
+          <p className="text-gray-600 text-lg">Total: <span className="font-semibold">R$ {totalPrice.toFixed(2)}</span></p>
+          <button
+            onClick={handleCheckout}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-6 w-full"
+          >
+            Finalizar Compra
+          </button>
+        </div>
+      )}
     </main>
   );
 }

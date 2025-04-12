@@ -30,6 +30,8 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - PORT=${PORT}
       - SECRET_KEY=${SECRET_KEY}
+      - STRIPE_TOKEN=${STRIPE_TOKEN}
+      - BASE_URL=${BASE_URL}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 10s

@@ -123,7 +123,7 @@ export default function Home() {
                   ? product.description.slice(0, 100) + '...'
                   : product.description}
               </p>
-              <p className="text-gray-600">${product.price}</p>
+              <p className="text-gray-600">R${product.price}</p>
               <button
                 onClick={() => handleAddToCart(product.id)}
                 className="mt-2 bg-gradient-to-r from-zinc-800 to-zinc-600 text-white font-bold py-2 px-4 rounded"

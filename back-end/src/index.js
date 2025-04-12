@@ -22,6 +22,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api', require('./routes/shopRoutes'));
 app.use('/api', require('./routes/authRoutes'));
 app.use('/api', require('./routes/cartRoutes'));
+app.use('/api', require('./routes/checkoutRoutes'));
 
 async function connectToDatabase() {
     try {
