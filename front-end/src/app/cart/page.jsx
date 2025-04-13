@@ -9,6 +9,13 @@ export default function CartPage() {
   const [error, setError] = useState('');
   const [totalPrice, setTotalPrice] = useState(0);
 
+  const [cpf, setCpf] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [cep, setCep] = useState('');
+  const [rua, setRua] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [numero, setNumero] = useState('');
+
   const fetchCart = async () => {
     try {
       const res = await fetch('/api/cart', { credentials: 'include' });
@@ -23,12 +30,28 @@ export default function CartPage() {
     }
   };
 
+  const fetchAddressByCep = async (cepDigitado) => {
+    try {
+      const { data } = await axios.get(`https://viacep.com.br/ws/${cepDigitado}/json/`);
+      if (!data.erro) {
+        setRua(data.logradouro);
+        setBairro(data.bairro);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar endereço pelo CEP:', err);
+    }
+  };
+
+  const handleCepChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '');
+    setCep(value);
+    if (value.length === 8) fetchAddressByCep(value);
+  };
+
   useEffect(() => {
     const fetchCsrfAndCart = async () => {
       try {
-        const { data } = await axios.get('/api/csrf-token', {
-          withCredentials: true,
-        });
+        const { data } = await axios.get('/api/csrf-token', { withCredentials: true });
         setCsrfToken(data.csrfToken);
       } catch (err) {
         console.error('Erro ao pegar CSRF token:', err);
@@ -80,13 +103,20 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     try {
-      const { data } = await axios.post('/api/checkout', {}, {
+      const { data } = await axios.post('/api/checkout', {
+        cpf,
+        telefone,
+        cep,
+        rua,
+        bairro,
+        numero,
+      }, {
         headers: { 'x-csrf-token': csrfToken },
         withCredentials: true,
       });
 
       if (data.url) {
-        window.location.href = data.url; // redireciona pro Stripe
+        window.location.href = data.url;
       }
     } catch (err) {
       console.error('Erro ao iniciar checkout:', err);
@@ -108,11 +138,7 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <div key={item.id} className="bg-white rounded-xl shadow p-4 flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
+                    <img src={item.product.image} alt={item.product.name} className="w-24 h-24 object-cover rounded-lg" />
                     <div>
                       <h2 className="text-lg font-semibold text-gray-800">{item.product.name}</h2>
                       <p className="text-sm text-gray-500">{item.product.description}</p>
@@ -120,42 +146,30 @@ export default function CartPage() {
                         R$ {(item.product.price * item.quantity).toFixed(2)}{' '}
                         <span className="text-sm text-gray-500 ml-1">(Qtd: {item.quantity})</span>
                       </p>
-
                       <div className="flex gap-2 mt-2">
-                        <button
-                          onClick={() => updateQuantity(item.id, 'decrement')}
-                          className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-                        >
-                          −
-                        </button>
-                        <button
-                          onClick={() => updateQuantity(item.id, 'increment')}
-                          className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-                        >
-                          +
-                        </button>
+                        <button onClick={() => updateQuantity(item.id, 'decrement')} className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">−</button>
+                        <button onClick={() => updateQuantity(item.id, 'increment')} className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">+</button>
                       </div>
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => handleRemoveFromCart(item.id)}
-                    className="text-red-600 hover:underline text-sm"
-                  >
-                    Remover
-                  </button>
+                  <button onClick={() => handleRemoveFromCart(item.id)} className="text-red-600 hover:underline text-sm">Remover</button>
                 </div>
               ))}
             </div>
             <div className="w-full lg:w-1/3 bg-white p-6 rounded-xl shadow h-fit">
               <h2 className="text-2xl font-bold mb-4 text-gray-800">Resumo do Pedido</h2>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 text-lg mb-4">
                 Total: <span className="font-semibold">R$ {totalPrice.toFixed(2)}</span>
               </p>
-              <button
-                onClick={handleCheckout}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-6 w-full"
-              >
+
+              <input type="text" placeholder="CPF" value={cpf} onChange={(e) => setCpf(e.target.value)} className="w-full mb-3 px-4 py-2 border rounded-md" />
+              <input type="text" placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} className="w-full mb-3 px-4 py-2 border rounded-md" />
+              <input type="text" placeholder="CEP" value={cep} onChange={handleCepChange} maxLength={8} className="w-full mb-3 px-4 py-2 border rounded-md" />
+              <input type="text" placeholder="Rua" value={rua} onChange={(e) => setRua(e.target.value)} className="w-full mb-3 px-4 py-2 border rounded-md" />
+              <input type="text" placeholder="Bairro" value={bairro} onChange={(e) => setBairro(e.target.value)} className="w-full mb-3 px-4 py-2 border rounded-md" />
+              <input type="text" placeholder="Número da casa" value={numero} onChange={(e) => setNumero(e.target.value)} className="w-full mb-4 px-4 py-2 border rounded-md" />
+
+              <button onClick={handleCheckout} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full">
                 Finalizar Compra
               </button>
             </div>
@@ -163,6 +177,5 @@ export default function CartPage() {
         )}
       </div>
     </main>
-
   );
 }

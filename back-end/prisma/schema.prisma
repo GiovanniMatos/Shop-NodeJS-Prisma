@@ -14,20 +14,22 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  email    String @unique
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  email    String  @unique
   password String
   carts    Cart[]
+  Order    Order[]
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   price       Float
   description String?
   image       String?
   carts       Cart[]
+  OrderItem   OrderItem[]
 }
 
 model Cart {
@@ -37,4 +39,31 @@ model Cart {
   quantity  Int     @default(1)
   user      User    @relation(fields: [userId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  total     Float
+  cpf       String
+  telefone  String
+  cep       String
+  rua       String
+  bairro    String
+  numero    String
+  createdAt DateTime @default(now())
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+}
+
+model OrderItem {
+  id        Int   @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
