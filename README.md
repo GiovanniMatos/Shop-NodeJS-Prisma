@@ -22,16 +22,6 @@ npm install && cd back-end && npm install && npx prisma migrate dev --name init
 ```bash
 cd front-end && npm install && npm run dev
 ```
-Caso não tenha o Docker instalado:<br>
-(back-end)
-```bash
-npm install && cd back-end && npm install && npx prisma migrate dev --name init
-&& node prisma/seed.js && npm run dev
-```
-(front-end)
-```bash
-cd front-end && npm install && npm run dev
-```
 
 http://localhost:80
 
