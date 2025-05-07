@@ -47,28 +47,27 @@ export default function Home() {
       const { data } = await axios.get('/api/csrf-token', {
         withCredentials: true,
       });
-
+  
       const csrfToken = data.csrfToken;
-
+  
       const res = await fetch('/api/cart/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-csrf-token': csrfToken,
+          'x-csrf-token': csrfToken, // Token extraído da resposta
         },
         credentials: 'include',
         body: JSON.stringify({ productId }),
       });
-
+  
       const responseData = await res.json();
-
+  
       if (!res.ok) {
         setError(responseData?.error || 'Erro ao adicionar produto ao carrinho.');
         return;
       }
-
+  
       const productName = responseData?.item?.product?.name;
-
       console.log(`✅ Produto adicionado ao carrinho: ${productName}`);
       setError(null);
       router.push('/cart');

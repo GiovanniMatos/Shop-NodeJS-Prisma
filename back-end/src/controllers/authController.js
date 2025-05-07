@@ -42,21 +42,23 @@ const login = async (req, res) => {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (user && await bcrypt.compare(password, user.password)) {
-      const token = jwt.sign({ userId: user.id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '1h' });
+      const csrfToken = crypto.randomBytes(32).toString('hex');
+      
+      const token = jwt.sign(
+        { 
+          userId: user.id, 
+          username: user.username, 
+          csrfToken 
+        },
+        process.env.SECRET_KEY, 
+        { expiresIn: '1h' }
+      );
 
       res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 3600000, // 1 hora
-      });
-      
-      const csrfToken = crypto.randomBytes(32).toString('hex');
-      res.cookie('csrfToken', csrfToken, {
-        httpOnly: true, 
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 3600000,
       });
 
       return res.json({ username: user.username });
